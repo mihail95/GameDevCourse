@@ -17,6 +17,6 @@
 
 <b>THIS MIGHT MAKE THE PLAYER A BIT OP...</b>
 
-
+<img src="ComputerRNG.png" alt="isolated" width="400"/>
 
 
