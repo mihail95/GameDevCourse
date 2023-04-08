@@ -23,5 +23,3 @@ Might be a bit easy for the player in its current itteration, but it felt fun wh
 Could implement a stage system, where the coumputer MaxHP increases, giving the opponent more time to ramp up its damage.
 
 
-
-
