@@ -261,9 +261,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4955078140566142890}
-  - component: {fileID: -5095681586082550853}
   - component: {fileID: 3994888466952939659}
   - component: {fileID: 4414378206460431554}
+  - component: {fileID: 7824287358488694964}
   m_Layer: 0
   m_Name: AsteroidBackground
   m_TagString: Untagged
@@ -287,18 +287,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5095681586082550853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4955078140566142891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a5266c9b9be6a74dbbf80a679cf5528, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &3994888466952939659
 Rigidbody2D:
   serializedVersion: 4
@@ -336,6 +324,23 @@ CapsuleCollider2D:
   m_Offset: {x: -3.0560613, y: 0.31474525}
   m_Size: {x: 1.054513, y: 1.2917303}
   m_Direction: 0
+--- !u!114 &7824287358488694964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4955078140566142891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b96d7a1b1e38814eb37008b93dfe658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectWalls:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &6762151866899860958
 GameObject:
   m_ObjectHideFlags: 0

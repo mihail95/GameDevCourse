@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EntitySpawner : MonoBehaviour
 {
@@ -10,10 +11,18 @@ public class EntitySpawner : MonoBehaviour
     [SerializeField] private GameObject asteroidBGPrefab;
     [SerializeField] private GameObject toolBoxPrefab;
     [SerializeField] private GameObject playerPodPrefab;
+    [SerializeField] private List<GameObject> spawnerList;
+
 
     public GameObject SpawnPlayerPod(Vector3 coords)
     {
         GameObject playerPodGO = Instantiate(playerPodPrefab, coords, Quaternion.Euler(0, 0, Random.Range(0, 360)));
+
+        return playerPodGO;
+    }
+    public GameObject SpawnPlayerPodRandom()
+    {
+        GameObject playerPodGO = SpawnPlayerPod(GenerateRandomLocationInsideBorders());
 
         return playerPodGO;
     }
@@ -33,6 +42,14 @@ public class EntitySpawner : MonoBehaviour
 
         return playerGO;
     }
+    public GameObject SpawnPlayerRandom(Player.PlayerState playerState)
+    {
+
+        GameObject playerGO = SpawnPlayer(playerState, GenerateRandomLocationInsideBorders());
+
+        return playerGO;
+    }
+
 
     public GameObject SpawnAsteroid(Vector3 coords)
     {
@@ -47,5 +64,48 @@ public class EntitySpawner : MonoBehaviour
         GameObject toolBoxGO = Instantiate(toolBoxPrefab, coords, Quaternion.identity);
 
         return toolBoxGO;
+    }
+
+    public List<GameObject> SpawnRandomSatellites(int satNum)
+    {
+        List<GameObject> satelliteList = new();
+
+        for (int i = 0; i<satNum; i++)
+        {
+            Vector3 randomLocation = GenerateRandomLocationInsideBorders();
+            GameObject satellite = SpawnSatellite(randomLocation);
+            satelliteList.Add(satellite);
+        }
+        
+
+        return satelliteList;
+    }
+
+    public List<GameObject> SpawnRandomInteractableObjects(int objNum)
+    {
+        List<GameObject> objectsList = new();
+        for (int i = 0; i < objNum; i++)
+        {
+            var spawnerPosition = spawnerList[(int)Random.Range(0,4)].transform.position;
+            GameObject objectToSpawn = new();
+            if (Random.value > 0.5f) 
+            {
+                objectToSpawn = SpawnToolBox(spawnerPosition);
+            }
+            else 
+            {
+                objectToSpawn = SpawnAsteroid(spawnerPosition);
+            }
+
+            objectsList.Add(objectToSpawn);
+        }
+
+        return objectsList;
+    }
+
+    private Vector3 GenerateRandomLocationInsideBorders()
+    {
+        Vector3 ranomLocationInsideBorders = new(Random.Range(-11f, 22f), Random.Range(-5f, 13f), 0);
+        return ranomLocationInsideBorders;
     }
 }

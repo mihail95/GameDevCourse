@@ -1444,7 +1444,6 @@ MonoBehaviour:
   satelliteState: 0
   colOn: {r: 0.28938052, g: 1, b: 0.18396229, a: 1}
   colOff: {r: 1, g: 0.07585368, b: 0, a: 1}
-  lightsSet: 0
 --- !u!50 &-1558832496823484621
 Rigidbody2D:
   serializedVersion: 4
@@ -1455,9 +1454,9 @@ Rigidbody2D:
   m_GameObject: {fileID: 3559244261453093194}
   m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0

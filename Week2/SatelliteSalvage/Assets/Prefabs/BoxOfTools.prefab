@@ -513,9 +513,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3228899607230095780}
-  - component: {fileID: -132018285533114244}
   - component: {fileID: 9201369458212788396}
   - component: {fileID: -8705815003840874448}
+  - component: {fileID: 3553605354593055298}
   m_Layer: 0
   m_Name: BoxOfTools
   m_TagString: Untagged
@@ -549,18 +549,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-132018285533114244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3228899607230095783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 716c15fd07ea12144aa4a70e4a78b58b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &9201369458212788396
 Rigidbody2D:
   serializedVersion: 4
@@ -573,7 +561,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.5
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -608,6 +596,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.7591352, y: 2.7811246}
   m_EdgeRadius: 0
+--- !u!114 &3553605354593055298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228899607230095783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b96d7a1b1e38814eb37008b93dfe658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetObject: {fileID: 0}
+  objectWalls:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  direction: {x: 0, y: 0, z: 0}
 --- !u!1 &5297438684867405869
 GameObject:
   m_ObjectHideFlags: 0

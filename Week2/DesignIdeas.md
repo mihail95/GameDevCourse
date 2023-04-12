@@ -34,19 +34,13 @@
 * Astronaut can interact with crates to gain ***Parts*** - *Done*
 * Astronaut uses parts to repair Satellites - *Done*
 * Repair all satellites, go to ship, voila! - *Done*
-* After tutorial stage, load same scene - Spawn 3 Satellites in random locations. Spawn in flying rocks and crates at random speeds and random angles from the border (maybe aim at center +- 25degrees)
+* After tutorial stage, load same scene - Spawn 3 Satellites in random locations. Spawn in flying rocks and crates at random speeds and random angles from the border spawners (aim at center +- 30degrees) - *Done*
 
 ## Extra features
 * UI for ***Parts*** - *Done*
 * Reset colors button - *Done*
 * Maybe music? Volume Slider?
-* Sounds for different actions?
-* Particles while flying?
-
-***Too complex:***
-* Robot can mine space rocks and give the player ***Materials***
-* ***Materials*** can be brought to the ship to receive ***Parts***
-* ***Parts*** can be used by the astronaut to fix broken satellites
+* Particles while moving?
 
 ## Submission
 Export to WebGL

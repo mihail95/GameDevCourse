@@ -17,20 +17,24 @@ public class GameManager : MonoBehaviour
     private static int satellitesRepaired;
     private static Player.PlayerState playerState;
     private static Player player;
+    private static int currentStage;
 
     private GameObject playerGO;
     private Dictionary<Player.PlayerState, GameObject> playerGOs = new();
     private Collider2D playerCollider;
     private GameObject playerPod;
-    private List<GameObject> gameObjectList;
+    private List<GameObject> satelliteObjectList;
+    [SerializeField] private List<GameObject> gameObjectList;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
+        satelliteObjectList = new();
         gameObjectList = new();
         // Setup Tutorial
+        currentStage = 0;
         satellitesNeeded = 1;
         playerGO = entitySpawner.SpawnPlayer(Player.PlayerState.ASTRONAUT, new Vector3(-5, -1, 0));
         player = playerGO.GetComponent<Player>();
@@ -38,7 +42,7 @@ public class GameManager : MonoBehaviour
         playerGOs.Add(Player.PlayerState.ASTRONAUT, playerGO);
 
         var satellite = entitySpawner.SpawnSatellite(new Vector3(1, 1, 0));
-        gameObjectList.Add(satellite);
+        satelliteObjectList.Add(satellite);
         
         var asteroid = entitySpawner.SpawnAsteroid(new Vector3(-1, 1, 0));
         gameObjectList.Add(satellite);
@@ -54,32 +58,30 @@ public class GameManager : MonoBehaviour
     private void StartStage()
     {
         // Cleanup previous stage
-        foreach (GameObject gameObject in gameObjectList)
-        {
-            Destroy(gameObject);
-        }
+        foreach (GameObject gameObject in gameObjectList) { Destroy(gameObject); }
+        foreach (GameObject satellite in satelliteObjectList) { Destroy(satellite); }
         foreach (GameObject player in playerGOs.Values) { if (player) { Destroy(player); }}
+        satelliteObjectList.Clear();
         gameObjectList.Clear();
         playerGOs.Clear();
         Destroy(playerPod);
 
         // Setup Stage
+        Player.ResetPartsCount();
         satellitesNeeded = 3;
         satellitesRepaired = 0;
-        playerGO = entitySpawner.SpawnPlayer(Player.PlayerState.ASTRONAUT, new Vector3(-5, -1, 0));
+        playerGO = entitySpawner.SpawnPlayerRandom(Player.PlayerState.ASTRONAUT);
         player = playerGO.GetComponent<Player>();
         playerCollider = playerGO.GetComponent<Collider2D>();
         playerGOs.Add(Player.PlayerState.ASTRONAUT, playerGO);
 
-        /*
-        entitySpawner.SpawnSatellite(new Vector3(1, 1, 0));
-        entitySpawner.SpawnAsteroid(new Vector3(-1, 1, 0));
-        entitySpawner.SpawnToolBox(new Vector3(3, -1, 0));
-        entitySpawner.SpawnToolBox(new Vector3(-1, 2, 0));
-        playerPod = entitySpawner.SpawnPlayerPod(new Vector3(15, -4, 0));
-        */
+        List<GameObject> satellites = entitySpawner.SpawnRandomSatellites(satellitesNeeded);
+        satelliteObjectList.AddRange(satellites); // Check if members get added separately or as a list => Do Satellites despawn at end of stage?
+
+        playerPod = entitySpawner.SpawnPlayerPodRandom();
 
         gameState = GameState.STAGE;
+        currentStage++;
     }
 
     public static GameState GetGameState()
@@ -89,8 +91,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameObject.Find("New Game Object") is GameObject emptyObject) { Destroy(emptyObject); }
+        gameObjectList.RemoveAll(obj => obj == null);
+
         if (gameState == GameState.TUTORIAL || gameState == GameState.STAGE)
         {
+            if (gameState == GameState.STAGE && (gameObjectList.Count(item => item != null) < (satellitesNeeded-satellitesRepaired)*4)) 
+            { 
+                gameObjectList.AddRange(entitySpawner.SpawnRandomInteractableObjects(((satellitesNeeded - satellitesRepaired) * 4) - gameObjectList.Count(item => item != null)));
+            }
             player = playerGO.GetComponent<Player>();
             CheckPlayerMovementInput();
             CheckPlayerActionInput();
@@ -115,43 +124,7 @@ public class GameManager : MonoBehaviour
     {   
         // North, East, South, West
         Tuple<int, int, int, int> playerIntersects = CheckPlayerIntersect();
-        // Commence Spaghetti
-        #region
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
-        {
-            if (playerIntersects.Item1 == 0) { player.MovePlayer(new Vector3(0, 1, 0)); }    
-        }
-        else if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
-        {
-            if (playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-1, 0, 0)); player.TurnPlayer(Vector2.left); }
-        }
-        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
-        {
-            if (playerIntersects.Item3 == 0) { player.MovePlayer(new Vector3(0, -1, 0)); }
-        }
-        else if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
-        {
-            if (playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(1, 0, 0)); player.TurnPlayer(Vector2.right); }
-        }
-        // Who is making me do this ?! - 8 Directional input
-        else if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
-        {
-            if (playerIntersects.Item1 == 0 && playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(0.71f, 0.71f, 0)); player.TurnPlayer(Vector2.right); }
-        }
-        else if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
-        {
-            if (playerIntersects.Item1 == 0 && playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-0.71f, 0.71f, 0)); player.TurnPlayer(Vector2.left); }
-        }
-        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
-        {
-            if (playerIntersects.Item3 == 0 && playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(0.71f, -0.71f, 0)); player.TurnPlayer(Vector2.right); }
-        }
-        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
-        {
-            if (playerIntersects.Item3 == 0 && playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-0.71f, -0.71f, 0)); player.TurnPlayer(Vector2.left); }
-        }
-        #endregion
-
+        HandleMovementInput(playerIntersects);
     }
     private Tuple<int, int, int, int> CheckPlayerIntersect()
     {
@@ -250,17 +223,55 @@ public class GameManager : MonoBehaviour
             }    
         }
     }
-
     public static Player.PlayerState GetPlayerState() { return playerState; }
     public static Player GetCurrentPlayer() { return player; }
-
     public static void IncrementSatelliteCount()
     {
         satellitesRepaired++;
     }
-
     public static Tuple<int, int> GetSatelliteCount() 
     {
         return new Tuple<int, int>(satellitesRepaired, satellitesNeeded);   
+    }
+    private void HandleMovementInput(Tuple<int, int, int, int>  playerIntersects)
+    {
+        // Commence Spaghetti
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
+        {
+            if (playerIntersects.Item1 == 0) { player.MovePlayer(new Vector3(0, 1, 0)); }
+        }
+        else if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
+        {
+            if (playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-1, 0, 0)); player.TurnPlayer(Vector2.left); }
+        }
+        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
+        {
+            if (playerIntersects.Item3 == 0) { player.MovePlayer(new Vector3(0, -1, 0)); }
+        }
+        else if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
+        {
+            if (playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(1, 0, 0)); player.TurnPlayer(Vector2.right); }
+        }
+        // Who is making me do this ?! - 8 Directional input
+        else if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
+        {
+            if (playerIntersects.Item1 == 0 && playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(0.71f, 0.71f, 0)); player.TurnPlayer(Vector2.right); }
+        }
+        else if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
+        {
+            if (playerIntersects.Item1 == 0 && playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-0.71f, 0.71f, 0)); player.TurnPlayer(Vector2.left); }
+        }
+        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)))
+        {
+            if (playerIntersects.Item3 == 0 && playerIntersects.Item2 == 0) { player.MovePlayer(new Vector3(0.71f, -0.71f, 0)); player.TurnPlayer(Vector2.right); }
+        }
+        else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)))
+        {
+            if (playerIntersects.Item3 == 0 && playerIntersects.Item4 == 0) { player.MovePlayer(new Vector3(-0.71f, -0.71f, 0)); player.TurnPlayer(Vector2.left); }
+        }
+    }
+    public static int GetStageNumber()
+    {
+        return currentStage;
     }
 }

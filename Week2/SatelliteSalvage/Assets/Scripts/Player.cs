@@ -41,8 +41,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        movementState = MovementState.NORMAL;
-        speedMod = 1.75f;
+        movementState = MovementState.BOOST;
+        speedMod = 3f;
     }
 
     private void Update()
@@ -160,5 +160,10 @@ public class Player : MonoBehaviour
     public static int GetPartsCount()
     {
         return partsCount;
+    }
+
+    public static void ResetPartsCount()
+    {
+        partsCount = 0;
     }
 }
