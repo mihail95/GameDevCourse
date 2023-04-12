@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4157505887593370588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4157505887593370586}
+  - component: {fileID: 4157505887593370589}
+  m_Layer: 0
+  m_Name: EntitySpawner
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4157505887593370586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4157505887593370588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4157505887593370589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4157505887593370588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 754135aa4f9c97e4db30f0e9b7587668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  astronautPrefab: {fileID: 3426827489513218689, guid: df253bfd6fe40b8409ae802306d02e67, type: 3}
+  robotPrefab: {fileID: 6181173728960415107, guid: 618e94178714f544aabfea0788222ebf, type: 3}
+  satelliteFGPrefab: {fileID: 3559244261453093194, guid: c6c7faac4c1d6a74c902751af84b2db9, type: 3}
+  satelliteBGPrefab: {fileID: 7521542677558942187, guid: ca923cd441d3c9043aeb2d8290dbb03d, type: 3}
