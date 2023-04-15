@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 using static Player;
 
@@ -45,7 +43,7 @@ public class GameManager : MonoBehaviour
         satelliteObjectList.Add(satellite);
         
         var asteroid = entitySpawner.SpawnAsteroid(new Vector3(-1, 1, 0));
-        gameObjectList.Add(satellite);
+        gameObjectList.Add(asteroid);
 
         var toolBox = entitySpawner.SpawnToolBox(new Vector3(3, -1, 0));
         gameObjectList.Add(toolBox);
@@ -74,7 +72,8 @@ public class GameManager : MonoBehaviour
         player = playerGO.GetComponent<Player>();
         playerCollider = playerGO.GetComponent<Collider2D>();
         playerGOs.Add(Player.PlayerState.ASTRONAUT, playerGO);
-
+        playerState = Player.PlayerState.ASTRONAUT;
+        RandomizePlanet.RandomizeAtmosphereColor();
         List<GameObject> satellites = entitySpawner.SpawnRandomSatellites(satellitesNeeded);
         satelliteObjectList.AddRange(satellites); // Check if members get added separately or as a list => Do Satellites despawn at end of stage?
 
@@ -91,9 +90,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameObject.Find("New Game Object") is GameObject emptyObject) { Destroy(emptyObject); }
-        gameObjectList.RemoveAll(obj => obj == null);
-
         if (gameState == GameState.TUTORIAL || gameState == GameState.STAGE)
         {
             if (gameState == GameState.STAGE && (gameObjectList.Count(item => item != null) < (satellitesNeeded-satellitesRepaired)*4)) 
@@ -103,6 +99,9 @@ public class GameManager : MonoBehaviour
             player = playerGO.GetComponent<Player>();
             CheckPlayerMovementInput();
             CheckPlayerActionInput();
+
+            if (GameObject.Find("New Game Object") is GameObject emptyObject) { Destroy(emptyObject); }
+            gameObjectList.RemoveAll(obj => obj == null);
 
             if (satellitesRepaired == satellitesNeeded)
             {
@@ -127,8 +126,10 @@ public class GameManager : MonoBehaviour
         HandleMovementInput(playerIntersects);
     }
     private Tuple<int, int, int, int> CheckPlayerIntersect()
-    {
-        playerCollider = playerGOs[playerState].GetComponent<Collider2D>();
+    {   
+        try { playerCollider = playerGOs[playerState].GetComponent<Collider2D>(); }
+        catch { Debug.Log("Stop right there!"); }
+        
 
         int intersectNorth = 0;
         int intersectEast = 0;

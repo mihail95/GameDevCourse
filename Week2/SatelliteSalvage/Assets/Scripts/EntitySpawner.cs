@@ -105,7 +105,7 @@ public class EntitySpawner : MonoBehaviour
 
     private Vector3 GenerateRandomLocationInsideBorders()
     {
-        Vector3 ranomLocationInsideBorders = new(Random.Range(-11f, 22f), Random.Range(-5f, 13f), 0);
+        Vector3 ranomLocationInsideBorders = new(Random.Range(-9f, 21f), Random.Range(-4f, 12f), 0);
         return ranomLocationInsideBorders;
     }
 }
