@@ -21,8 +21,12 @@ public class DiscoLight : MonoBehaviour
 
         while (true) 
         {
-            GenerateRandomColor();
-            yield return new WaitForSeconds(0.5f + delay);
+            if (!Player.specialDance)
+            {
+                GenerateRandomColor();
+                yield return new WaitForSeconds(0.5f + delay);
+            }
+            else { yield return null; }
         }
     }
 

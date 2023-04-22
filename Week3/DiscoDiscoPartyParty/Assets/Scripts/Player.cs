@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static bool specialDance;
     private float speedMod;
     private Dancer thisDancer;
 
     private void Start()
     {
-        speedMod = 2f;
+        specialDance = false;
+        speedMod = 4f;
         thisDancer = GetComponent<Dancer>();
     }
 
@@ -48,6 +50,10 @@ public class Player : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) && !thisDancer.isDancing)
         {
             StartCoroutine(thisDancer.ScaleUpAndDown());
+        }
+        if ((Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) && !thisDancer.isDancing)
+        {
+            StartCoroutine(thisDancer.SpecialDance());
         }
     }
 }

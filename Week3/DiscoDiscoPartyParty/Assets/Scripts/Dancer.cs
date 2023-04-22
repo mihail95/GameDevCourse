@@ -78,7 +78,10 @@ public class Dancer : MonoBehaviour
 
     public IEnumerator SpecialDance()
     {
+        Player.specialDance = true;
         int startingBeat = Conductor.instance.pulseCounter;
         while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
+        Debug.Log("Sprecial Dance");
+        Player.specialDance = false;
     }
 }

@@ -11,13 +11,13 @@
     * Do a barrel roll! -- DONE
     * scale up, up, up, scale down (to starting scale) -- DONE
 3. Player can not do anything while dancing -- DONE
-4. NPCs that dance
+4. NPCs that dance -- DONE
 5. Cool dance move - at least 3 seconds long, background becomes completely black and all disco lights stop changing color
 
 ## Cheat codes
-1. Implement some sort of buffer
+1. Implement some sort of buffer -- DONE
 2. NINJA - transparent player; -50% movement speed
-3. DOGE - changes all NPCs to Doge
+3. DOGE - changes all NPCs to Doge -- DONE
 4. SQUIDGAME - If NPC dances - destroy, if player moves/dances - reload scene
 5. Additional cheat - complexity between 3 and 4
 

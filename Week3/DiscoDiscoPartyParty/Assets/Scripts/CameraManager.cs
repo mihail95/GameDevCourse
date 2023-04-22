@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour
     {
         try
         {
-            float step = 2.5f * Time.deltaTime;
+            float step = 3.5f * Time.deltaTime;
             Vector2 pos = Vector2.MoveTowards(transform.position, player.transform.position, step);
             transform.position = new Vector3(pos.x, pos.y, -10f);
         }
@@ -36,8 +36,7 @@ public class CameraManager : MonoBehaviour
     public static void DecreaseBrightness()
     {
         Color backgroundColor = backgroundSR.color;
-        float currentH, currentS, currentV;
-        Color.RGBToHSV(backgroundColor, out currentH, out currentS, out currentV);
+        Color.RGBToHSV(backgroundColor, out float currentH, out float currentS, out float currentV);
         backgroundSR.color = Color.HSVToRGB(currentH, currentS, currentV - 0.2f);
     }
 }
