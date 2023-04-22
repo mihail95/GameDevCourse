@@ -13,10 +13,10 @@ public class Dancer : MonoBehaviour
     public IEnumerator SideMoves()
     {
         isDancing = true;
-        int startingBeat = GameManager.currentBeatNumber;
         Vector3 currentPos = transform.position;
         Vector3 startingPos = currentPos;
-        while (GameManager.currentBeatNumber == startingBeat) { yield return null; }
+        int startingBeat = Conductor.instance.pulseCounter;
+        while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
         currentPos.x -= 1; // -1; 0
         transform.position = currentPos;
         yield return new WaitForSecondsRealtime(0.476f);
@@ -36,11 +36,9 @@ public class Dancer : MonoBehaviour
     public IEnumerator BarrelRoll()
     {
         isDancing = true;
-        int startingBeat = GameManager.currentBeatNumber;
-        Quaternion currentRotation = transform.rotation;
-        Quaternion startingRotation = currentRotation;
-        while (GameManager.currentBeatNumber == startingBeat) { yield return null; }
-        currentRotation = Quaternion.Euler(0, 0, 90);
+        int startingBeat = Conductor.instance.pulseCounter;
+        while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
+        Quaternion currentRotation = Quaternion.Euler(0, 0, 90);
         transform.rotation = currentRotation;
         yield return new WaitForSecondsRealtime(0.476f);
         currentRotation = Quaternion.Euler(0, 0, 180);
@@ -57,10 +55,10 @@ public class Dancer : MonoBehaviour
     public IEnumerator ScaleUpAndDown()
     {
         isDancing = true;
-        int startingBeat = GameManager.currentBeatNumber;
         Vector3 currentScale = transform.localScale;
         Vector3 startingScale = currentScale;
-        while (GameManager.currentBeatNumber == startingBeat) { yield return null; }
+        int startingBeat = Conductor.instance.pulseCounter;
+        while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
         currentScale.x += 0.5f;
         currentScale.y += 0.5f;
         transform.localScale = currentScale;
@@ -80,7 +78,7 @@ public class Dancer : MonoBehaviour
 
     public IEnumerator SpecialDance()
     {
-        int startingBeat = GameManager.currentBeatNumber;
-        while (GameManager.currentBeatNumber == startingBeat) { yield return null; }
+        int startingBeat = Conductor.instance.pulseCounter;
+        while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
     }
 }

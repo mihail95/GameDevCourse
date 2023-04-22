@@ -24,7 +24,7 @@
 ## Extras
 1. Music -- DONE
 2. Volume Slider -- DONE
-3. Sync Dances to Music -- DONE (but needs improvements)
+3. Sync Dances to Music -- DONE (reused Conductor.cs from old project)
     * 126 BPM
         * 1 beat = 476ms = 2.08Hz
         * 2 beats = 952ms = 1.05Hz

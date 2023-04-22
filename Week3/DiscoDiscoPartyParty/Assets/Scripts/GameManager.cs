@@ -8,15 +8,10 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject lightPrefab;
     [SerializeField] private Camera mainCamera;
-    private double startTime;
-    public static int currentBeatNumber;
     
     private void Start()
     {
-        startTime = Time.timeAsDouble;
         mainCamera = Camera.main;
-        currentBeatNumber = 1;
-        StartCoroutine(UpdateBeatNumber());
     }
 
     private void Update()
@@ -31,14 +26,5 @@ public class GameManager : MonoBehaviour
         Vector3 coords = mainCamera.ScreenToWorldPoint(new Vector3(Random.Range(0f, Screen.width), Random.Range(0f, Screen.height), 0f));
         coords.z = 0f;
         Instantiate(lightPrefab, coords, Quaternion.identity);
-    }
-
-    private IEnumerator UpdateBeatNumber()
-    {
-        while (true)
-        {
-            yield return new WaitForSecondsRealtime(0.476f);
-            currentBeatNumber = (currentBeatNumber + 1) % 4;
-        }
     }
 }
