@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -28,8 +29,7 @@ public class CameraManager : MonoBehaviour
     public static void IncreaseBrightness()
     {
         Color backgroundColor = backgroundSR.color;
-        float currentH, currentS, currentV;
-        Color.RGBToHSV(backgroundColor, out currentH, out currentS, out currentV);
+        Color.RGBToHSV(backgroundColor, out float currentH, out float currentS, out float currentV);
         backgroundSR.color = Color.HSVToRGB(currentH, currentS, currentV + 0.2f);
     }
 
@@ -38,5 +38,19 @@ public class CameraManager : MonoBehaviour
         Color backgroundColor = backgroundSR.color;
         Color.RGBToHSV(backgroundColor, out float currentH, out float currentS, out float currentV);
         backgroundSR.color = Color.HSVToRGB(currentH, currentS, currentV - 0.2f);
+    }
+
+    public static void SetBrightnessToMin()
+    {
+        Color backgroundColor = backgroundSR.color;
+        Color.RGBToHSV(backgroundColor, out float currentH, out float currentS, out float currentV);
+        backgroundSR.color = Color.HSVToRGB(currentH, currentS, 0f);
+    }
+
+    public static void SetBrightnessToMax()
+    {
+        Color backgroundColor = backgroundSR.color;
+        Color.RGBToHSV(backgroundColor, out float currentH, out float currentS, out float currentV);
+        backgroundSR.color = Color.HSVToRGB(currentH, currentS, 1f);
     }
 }

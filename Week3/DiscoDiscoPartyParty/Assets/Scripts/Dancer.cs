@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Dancer : MonoBehaviour
 {
-    [SerializeField] public bool isDancing;
+    public bool isDancing;
 
     private void Start()
     {
@@ -79,9 +79,13 @@ public class Dancer : MonoBehaviour
     public IEnumerator SpecialDance()
     {
         Player.specialDance = true;
+        CameraManager.SetBrightnessToMin();
         int startingBeat = Conductor.instance.pulseCounter;
         while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
-        Debug.Log("Sprecial Dance");
+        Debug.Log("Special Dance");
+        yield return new WaitForSecondsRealtime(3f);
+        Debug.Log("Special Dance End");
+        CameraManager.SetBrightnessToMax();
         Player.specialDance = false;
     }
 }

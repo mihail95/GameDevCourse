@@ -11,7 +11,7 @@ public class Conductor : MonoBehaviour
     [SerializeField] private float songBpm; // BPM
     [SerializeField] private AudioSource musicSource; // Music Source
 
-    public int pulseCounter; // Calculates the half note pulse (range 1-4)
+    public int pulseCounter; // Calculates the quarter note pulse (range 1-4)
 
     private void Awake()
     {

@@ -12,7 +12,10 @@
     * scale up, up, up, scale down (to starting scale) -- DONE
 3. Player can not do anything while dancing -- DONE
 4. NPCs that dance -- DONE
-5. Cool dance move - at least 3 seconds long, background becomes completely black and all disco lights stop changing color
+5. Cool dance move - 
+    * at least 3 seconds long
+    * background becomes completely black -- DONE
+    * all disco lights stop changing color -- DONE
 
 ## Cheat codes
 1. Implement some sort of buffer -- DONE
