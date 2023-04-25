@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,10 +6,17 @@ using UnityEngine;
 public class Dancer : MonoBehaviour
 {
     public bool isDancing;
+    private bool timerStarted;
 
     private void Start()
     {
-        isDancing = false; 
+        isDancing = false;
+        timerStarted = false;
+    }
+
+    private void Update()
+    {
+        
     }
     public IEnumerator SideMoves()
     {
@@ -78,14 +86,35 @@ public class Dancer : MonoBehaviour
 
     public IEnumerator SpecialDance()
     {
+        isDancing = true;
         Player.specialDance = true;
         CameraManager.SetBrightnessToMin();
         int startingBeat = Conductor.instance.pulseCounter;
         while (Conductor.instance.pulseCounter == startingBeat) { yield return null; }
-        Debug.Log("Special Dance");
-        yield return new WaitForSecondsRealtime(3f);
-        Debug.Log("Special Dance End");
+        Vector3 currentScale = transform.localScale;
+        Vector3 startingScale = currentScale;
+        StartCoroutine(StartMoveTimer());
+        while (timerStarted == true) 
+        {
+            currentScale.x += 0.2f * Time.deltaTime;
+            currentScale.y += 0.2f * Time.deltaTime;
+            transform.Rotate(350f * Time.deltaTime * Vector3.up);
+            transform.Rotate(50f * Time.deltaTime * Vector3.right);
+            transform.localScale = currentScale;
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1f);
+        transform.rotation = Quaternion.identity;
+        transform.localScale = startingScale;
         CameraManager.SetBrightnessToMax();
         Player.specialDance = false;
+        isDancing = false;
+    }
+
+    private IEnumerator StartMoveTimer()
+    {
+        timerStarted = true;
+        yield return new WaitForSecondsRealtime(4f);
+        timerStarted = false;
     }
 }

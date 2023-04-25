@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class VolumeSlider : MonoBehaviour
 {
-    [ SerializeField ] private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource airhornAudioSource;
     private float sliderVal;
     private Slider slider;
     
@@ -27,5 +28,6 @@ public class VolumeSlider : MonoBehaviour
     private void ChangeVolume(float volume)
     {
        audioSource.volume = volume*Mathf.Log(3);
+       airhornAudioSource.volume = volume / 5;
     }
 }

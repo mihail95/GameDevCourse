@@ -12,17 +12,22 @@
     * scale up, up, up, scale down (to starting scale) -- DONE
 3. Player can not do anything while dancing -- DONE
 4. NPCs that dance -- DONE
-5. Cool dance move - 
-    * at least 3 seconds long
+5. Cool dance move - DONE
+    * at least 3 seconds long -- DONE
     * background becomes completely black -- DONE
     * all disco lights stop changing color -- DONE
 
 ## Cheat codes
 1. Implement some sort of buffer -- DONE
-2. NINJA - transparent player; -50% movement speed
+2. NINJA - transparent player; -50% movement speed -- DONE
 3. DOGE - changes all NPCs to Doge -- DONE
-4. SQUIDGAME - If NPC dances - destroy, if player moves/dances - reload scene
-5. Additional cheat - complexity between 3 and 4
+4. SQUIDGAME
+    * Find all lamps (by Tag), change green/red on a timer
+    * If NPC dances while red - destroy
+    * if player moves/dances while red - reload scene
+
+
+5. Additional cheat - complexity between 3 and 4 -- DONE
 
 ## Extras
 1. Music -- DONE

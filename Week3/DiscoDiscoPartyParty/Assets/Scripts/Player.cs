@@ -7,17 +7,23 @@ public class Player : MonoBehaviour
     public static bool specialDance;
     private float speedMod;
     private Dancer thisDancer;
+    private SpriteRenderer mySpriteRenderer;
+    private bool isNinja;
 
     private void Start()
     {
+        isNinja = false;
         specialDance = false;
         speedMod = 4f;
         thisDancer = GetComponent<Dancer>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        // Check for ninja cheat first
+        if (CheatManager.ninjaCheat != isNinja) { ToggleNinjaMode(); }
         // Movement
         // Maybe this would be better than listing all combinations like last time ...
         if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !thisDancer.isDancing)
@@ -55,5 +61,12 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(thisDancer.SpecialDance());
         }
+    }
+
+    private void ToggleNinjaMode()
+    {
+        speedMod = CheatManager.ninjaCheat ? 2f : 4f;
+        mySpriteRenderer.color = new Color(1f, 1f, 1f, CheatManager.ninjaCheat ? 0.5f : 1f);
+        isNinja = !isNinja;
     }
 }
