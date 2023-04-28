@@ -22,9 +22,9 @@
 2. NINJA - transparent player; -50% movement speed -- DONE
 3. DOGE - changes all NPCs to Doge -- DONE
 4. SQUIDGAME
-    * Find all lamps (by Tag), change green/red on a timer
-    * If NPC dances while red - destroy
-    * if player moves/dances while red - reload scene
+    * Change green/red on a timer -- DONE
+    * If NPC dances while red - destroy -- DONE
+    * if player moves/dances while red - reload scene -- DONE
 
 
 5. Additional cheat - complexity between 3 and 4 -- DONE

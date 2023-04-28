@@ -16,7 +16,7 @@ public class Dancer : MonoBehaviour
 
     private void Update()
     {
-        
+        if (isDancing && CheatManager.squidgameCheat && DiscoLight.redLight) { Destroy(gameObject); }
     }
     public IEnumerator SideMoves()
     {
