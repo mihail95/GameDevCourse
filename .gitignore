@@ -51,6 +51,8 @@ ExportedObj/
 *.ogg
 *.png
 *.ttf
+*.pdf
+*.txt
 
 # Unity3D generated meta files
 *.pidb.meta
