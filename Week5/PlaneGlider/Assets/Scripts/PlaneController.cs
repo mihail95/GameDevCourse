@@ -18,6 +18,7 @@ public class PlaneController : MonoBehaviour
     [SerializeField] private AudioSource engineSound;
     [SerializeField] private AudioSource pickupSound;
     [SerializeField] private AudioSource crashSound;
+    [SerializeField] private AudioSource explosionSound;
     [SerializeField] TextMeshProUGUI boostText;
     [SerializeField] Image boostImage;
     [SerializeField] TextMeshProUGUI respawnText;
@@ -29,9 +30,11 @@ public class PlaneController : MonoBehaviour
     private int boostAmount;
     private bool hasCrashed;
     private bool hasFuel;
+    private bool missileHit;
 
     private void Awake()
     {
+        missileHit = false;
         boostAmount = 100;
         initAnimSpeed = animator.speed;
         animator.speed = 0;
@@ -46,15 +49,16 @@ public class PlaneController : MonoBehaviour
 
     private void Update()
     {
-        if (hasCrashed)
+        if (Input.GetKeyDown(KeyCode.R)) { SceneManager.LoadScene("MainMenu"); }
+        if (hasCrashed && !missileHit)
         {
             isBoosting = false;
             animator.speed = 0;
             engineSound.Stop();
-            StopCoroutine(DecreaseBoost());
+            StopCoroutine(nameof(DecreaseBoost));
         }
         if (!hasFuel && boostAmount > 0) { hasFuel = true; }
-        if (Input.GetKey(KeyCode.Space) && !isBoosting && hasFuel && !hasCrashed)
+        if (Input.GetKey(KeyCode.Space) && !isBoosting && hasFuel && !hasCrashed && !missileHit)
         {
             rigidBody.velocity = Vector2.right * horizontalSpeed + Vector2.up * boostForce;
             isBoosting = true;
@@ -62,7 +66,7 @@ public class PlaneController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
             animator.speed = initAnimSpeed;
             engineSound.Play();
-            StartCoroutine(DecreaseBoost());
+            StartCoroutine(nameof(DecreaseBoost));
         }
         if ((Input.GetKeyUp(KeyCode.Space) && isBoosting) || !hasFuel && !hasCrashed)
         {
@@ -71,12 +75,14 @@ public class PlaneController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, 0f, initAngle);
             animator.speed = 0;
             engineSound.Stop();
-            StopCoroutine(DecreaseBoost());
+            StopCoroutine(nameof(DecreaseBoost));
         }
         if (Input.GetKeyDown(KeyCode.Space) && hasCrashed) 
         { 
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Physics2D.IgnoreLayerCollision(9, 7, false);
+            Physics2D.IgnoreLayerCollision(9, 6, false);
+            Physics2D.IgnoreLayerCollision(9, 11, false);
         }
         boostText.text = (boostAmount > 0) ? boostAmount.ToString() : "EMPTY";
         boostImage.fillAmount = boostAmount / 100f;
@@ -92,40 +98,72 @@ public class PlaneController : MonoBehaviour
         return transform.position.x;
     }
 
+    public Vector2 GetPlayerVelocity()
+    {
+        return rigidBody.velocity;
+    }
+
     private IEnumerator DecreaseBoost()
     {
         while (isBoosting && boostAmount > 0) { 
             boostAmount--;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.04f);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"Collided with {collision.gameObject.name}");
-        if ((collision.gameObject.name.Contains("ground") || collision.gameObject.name.Contains("rock")) && !hasCrashed)
+        if ((collision.gameObject.name.Contains("ground") || collision.gameObject.name.Contains("rock") || collision.gameObject.name.Contains("EnemyPlane") || collision.gameObject.name.Contains("Missile"))  && !hasCrashed)
         {
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 3f);
-            crashSound.PlayOneShot(crashSound.clip);
-            hasCrashed = true;
 
             // Disable collisions and enable gravity and rotation for bounces
             rigidBody.gravityScale = 1f;
             rigidBody.constraints = RigidbodyConstraints2D.None;
             Physics2D.IgnoreLayerCollision(9, 7);
+            Physics2D.IgnoreLayerCollision(9, 6);
+            Physics2D.IgnoreLayerCollision(9, 11);
             respawnText.gameObject.SetActive(true);
+
+            if (collision.gameObject.name.Contains("Missile"))
+            {
+                missileHit = true;
+                Destroy(collision.gameObject);
+                StartCoroutine(nameof(ExplodeAnimation));
+            }
+            else if (!collision.gameObject.name.Contains("Missile") && !missileHit)
+            {
+                hasCrashed = true;
+                crashSound.PlayOneShot(crashSound.clip);
+            }
+
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"Collided with trigger {collision.gameObject.name}");
         if (collision.gameObject.name.Contains("boostPickup"))
         {
             Destroy(collision.gameObject);
             pickupSound.PlayOneShot(pickupSound.clip);
             boostAmount +=  Mathf.Min(50, 100 - boostAmount);
         }
+        else if (collision.gameObject.name.Contains("FinishLine"))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    private IEnumerator ExplodeAnimation()
+    {
+        animator.speed = 1;
+        animator.SetBool("missileHit", true);
+        explosionSound.PlayOneShot(explosionSound.clip);
+        yield return new WaitForSeconds(1);
+        animator.SetBool("missileHit", false);
+        yield return new WaitForSeconds(0.5f);
+        hasCrashed = true;
+        missileHit = false;
     }
 
 }

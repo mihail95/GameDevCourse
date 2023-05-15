@@ -8,15 +8,15 @@
 * The plane is animated by flipping through the individual sprites. Furthermore, the plane is always rotated in its moving direction (see code from exercise 3). If you use your own sprite, it also has to have some kind of animation. -- DONE
 
 ## Obstacle Course (5 Points)
-* Build one level per group member that contains the elements described in the next few tasks and a goal at the end. The camera follows the player on the x-axis throughout each level.
+* Build one level per group member that contains the elements described in the next few tasks and a goal at the end. The camera follows the player on the x-axis throughout each level. -- DONE
 * The player can collect items that restore some of the plane's fuel. Collecting an item plays a fitting sound effect. -- DONE
-* Create a ground and at least two basic obstacles. When the plane collides with either of them, a sound effect is played and the controls are deactivated. The player can then restart the level by pressing Space. -- 1/2 DONE
-* [Hard] Create two different moving obstacles per group member and add them to your own level. If you want, you can also use the other group members' obstacles in your own course.
+* Create a ground and at least two basic obstacles. When the plane collides with either of them, a sound effect is played and the controls are deactivated. The player can then restart the level by pressing Space. -- DONE
+* [Hard] Create two different moving obstacles per group member and add them to your own level. If you want, you can also use the other group members' obstacles in your own course. -- DONE
 * [Hard] When the plane crashes, instead of just falling down, it will now bounce on the ground indefinitely. While bouncing around, collisions with items and every obstacle other than the ground are deactivated. -- DONE
 
 ## Menu (1 Point)
 * Create a main menu that is shown at the start of the game. The level can be selected by clicking on a screenshot of your course. If the player presses R while in a level, or reaches the goal, they are brought back to the menu.
-(In case you don't implement a menu, please provide some other way of reaching all of your levels, so that we can grade your submission.)
+(In case you don't implement a menu, please provide some other way of reaching all of your levels, so that we can grade your submission.) -- DONE
 
 ## Write Feedback for A1 and A2
 * Deadline May 21st
