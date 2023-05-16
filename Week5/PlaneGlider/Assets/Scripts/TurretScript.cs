@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class TurretScript : MonoBehaviour
@@ -63,7 +62,7 @@ public class TurretScript : MonoBehaviour
         while (true)
         {
             ShootMissile();
-            yield return new WaitForSeconds(shotDelay);
+            yield return new WaitForSecondsRealtime(shotDelay);
         }
     }
 

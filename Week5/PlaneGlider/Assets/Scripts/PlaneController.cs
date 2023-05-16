@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -22,12 +21,13 @@ public class PlaneController : MonoBehaviour
     [SerializeField] TextMeshProUGUI boostText;
     [SerializeField] Image boostImage;
     [SerializeField] TextMeshProUGUI respawnText;
+    [SerializeField] float boostDecreaseRate;
 
     private float initAnimSpeed;
     private bool isBoosting;
     private Vector2 initVelocity;
     private float initAngle;
-    private int boostAmount;
+    private float boostAmount;
     private bool hasCrashed;
     private bool hasFuel;
     private bool missileHit;
@@ -35,7 +35,7 @@ public class PlaneController : MonoBehaviour
     private void Awake()
     {
         missileHit = false;
-        boostAmount = 100;
+        boostAmount = 100f;
         initAnimSpeed = animator.speed;
         animator.speed = 0;
         isBoosting = false;
@@ -47,17 +47,8 @@ public class PlaneController : MonoBehaviour
         hasFuel = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R)) { SceneManager.LoadScene("MainMenu"); }
-        if (hasCrashed && !missileHit)
-        {
-            isBoosting = false;
-            animator.speed = 0;
-            engineSound.Stop();
-            StopCoroutine(nameof(DecreaseBoost));
-        }
-        if (!hasFuel && boostAmount > 0) { hasFuel = true; }
         if (Input.GetKey(KeyCode.Space) && !isBoosting && hasFuel && !hasCrashed && !missileHit)
         {
             rigidBody.velocity = Vector2.right * horizontalSpeed + Vector2.up * boostForce;
@@ -68,12 +59,27 @@ public class PlaneController : MonoBehaviour
             engineSound.Play();
             StartCoroutine(nameof(DecreaseBoost));
         }
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) { SceneManager.LoadScene("MainMenu"); }
+        if (hasCrashed && !missileHit)
+        {
+            isBoosting = false;
+            animator.speed = 0;
+            engineSound.Stop();
+            StopCoroutine(nameof(DecreaseBoost));
+        }
+        if (!hasFuel && boostAmount > 0f) { hasFuel = true; }
         if ((Input.GetKeyUp(KeyCode.Space) && isBoosting) || !hasFuel && !hasCrashed)
         {
-            rigidBody.velocity = initVelocity;
+            if (!missileHit) 
+            { 
+                rigidBody.velocity = initVelocity;
+                transform.rotation = Quaternion.Euler(0f, 0f, initAngle);
+                animator.speed = 0;
+            }
             isBoosting = false;
-            transform.rotation = Quaternion.Euler(0f, 0f, initAngle);
-            animator.speed = 0;
             engineSound.Stop();
             StopCoroutine(nameof(DecreaseBoost));
         }
@@ -84,10 +90,10 @@ public class PlaneController : MonoBehaviour
             Physics2D.IgnoreLayerCollision(9, 6, false);
             Physics2D.IgnoreLayerCollision(9, 11, false);
         }
-        boostText.text = (boostAmount > 0) ? boostAmount.ToString() : "EMPTY";
+        boostText.text = (boostAmount > 0f) ? Mathf.RoundToInt(boostAmount).ToString() : "EMPTY";
         boostImage.fillAmount = boostAmount / 100f;
 
-        if (boostAmount == 0)
+        if (boostAmount <= 0f)
         {
             hasFuel = false;
         }
@@ -105,9 +111,9 @@ public class PlaneController : MonoBehaviour
 
     private IEnumerator DecreaseBoost()
     {
-        while (isBoosting && boostAmount > 0) { 
-            boostAmount--;
-            yield return new WaitForSeconds(0.04f);
+        while (isBoosting && boostAmount > 0f) { 
+            boostAmount -= boostDecreaseRate * Time.deltaTime;
+            yield return null;
         }
     }
 
@@ -146,7 +152,7 @@ public class PlaneController : MonoBehaviour
         {
             Destroy(collision.gameObject);
             pickupSound.PlayOneShot(pickupSound.clip);
-            boostAmount +=  Mathf.Min(50, 100 - boostAmount);
+            boostAmount +=  Mathf.Min(50f, 100f - boostAmount);
         }
         else if (collision.gameObject.name.Contains("FinishLine"))
         {
@@ -159,9 +165,9 @@ public class PlaneController : MonoBehaviour
         animator.speed = 1;
         animator.SetBool("missileHit", true);
         explosionSound.PlayOneShot(explosionSound.clip);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
         animator.SetBool("missileHit", false);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         hasCrashed = true;
         missileHit = false;
     }

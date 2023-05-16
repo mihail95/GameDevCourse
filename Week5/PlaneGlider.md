@@ -18,5 +18,7 @@
 * Create a main menu that is shown at the start of the game. The level can be selected by clicking on a screenshot of your course. If the player presses R while in a level, or reaches the goal, they are brought back to the menu.
 (In case you don't implement a menu, please provide some other way of reaching all of your levels, so that we can grade your submission.) -- DONE
 
+
+## WHY DOES IT NOT WORK LIKE IN THE EDITOR WTF?!
 ## Write Feedback for A1 and A2
 * Deadline May 21st
