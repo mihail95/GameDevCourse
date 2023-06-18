@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
 
-        playerPos = new Vector3(-4f, -5f, 0f);
         DontDestroyOnLoad(gameObject);
     }
 }

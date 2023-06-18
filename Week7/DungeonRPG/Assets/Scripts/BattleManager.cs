@@ -19,6 +19,9 @@ public class BattleGameImproved : MonoBehaviour
     [SerializeField] TextMeshProUGUI stunnedText;
     [SerializeField] Light2D stageLight;
     [SerializeField] Animator enemyAnimator;
+    [SerializeField] Light2D lanternLight;
+
+    private MusicManager musicManager;
     enum GameState { gameStart, stageStart, playerTurn, enemyTurn, gameWon, gameLost }
     GameState gameState = GameState.gameStart;
     int stunCtr, playerHP, enemyHP, maxPlayerHP, maxEnemyHP;
@@ -27,10 +30,12 @@ public class BattleGameImproved : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        musicManager = FindObjectOfType<MusicManager>();
         maxEnemyHP = 20;
         maxPlayerHP = 15;
         gameState = GameState.stageStart;
         StartStage();
+        musicManager.PlayMusic("battle");
     }
     void StartStage()
     {
@@ -45,6 +50,7 @@ public class BattleGameImproved : MonoBehaviour
     }
     public void PlayerAttack()
     {
+        musicManager.PlaySound("eHit");
         int damage = Random.Range(2, 3);
         if (isStunned) { damage *= 2; }
         enemyHP -= damage;
@@ -84,6 +90,7 @@ public class BattleGameImproved : MonoBehaviour
     }
     public void PlayerRun()
     {
+        musicManager.PlaySound("pRun");
         QuitBattle();
     }
     void SwitchTurn()
@@ -102,10 +109,12 @@ public class BattleGameImproved : MonoBehaviour
             {
                 button.interactable = !button.interactable;
             }
+            if (!isCharging) { lanternLight.enabled = false; }
         }
     }
     void MakeComputerMove()
     {
+        lanternLight.enabled = false;
         if (isCharging) { DealChargeDamage(); }
         else
         {
@@ -119,6 +128,7 @@ public class BattleGameImproved : MonoBehaviour
             {
                 if (!hasParried)
                 {
+                    musicManager.PlaySound("ePowUp");
                     stunCtr += 1;
                     bonusDmgText.SetText($"+{stunCtr}");
                     statusText.text = $"The enemy recovers from the stun and gains an attack bonus.";
@@ -136,14 +146,17 @@ public class BattleGameImproved : MonoBehaviour
     }
     void DealChargeDamage()
     {
+        lanternLight.enabled = true;
+        enemyAnimator.SetBool("specialAttack", true);
         if (!isNegating)
         {
+            musicManager.PlaySound("pHit");
             playerHP = 0;
             playerHPBar.fillAmount = (float) playerHP / maxPlayerHP;
             playerHPText.SetText($"{playerHP}/{maxPlayerHP}");
             statusText.text = $"You got hit by a charged attack.";
             gameState = GameState.gameLost;
-            QuitBattle();
+            StartCoroutine(WaitAndQuitBattle(2f));
         }
         else
         {
@@ -158,6 +171,7 @@ public class BattleGameImproved : MonoBehaviour
     void ComputerAttack()
     {
         enemyAnimator.SetBool("isAttacking", true);
+        musicManager.PlaySound("pHit");
         int damage = Random.Range(2, 5) + stunCtr;
         playerHP -= damage;
         playerHPBar.fillAmount = (float) playerHP / maxPlayerHP;
@@ -172,11 +186,13 @@ public class BattleGameImproved : MonoBehaviour
         
 
 
-        if (playerHP <= 0) { gameState = GameState.gameLost; QuitBattle(); }
+        if (playerHP <= 0) { gameState = GameState.gameLost; StartCoroutine(WaitAndQuitBattle(0.5f)); }
         else StartCoroutine(WaitAndSwitchTurn());
     }
     void ComputerCharge()
     {
+        musicManager.PlaySound("eAlert");
+        lanternLight.enabled = true;
         statusText.text = "Your enemy is charging a devastating attack!";
         isCharging = true;
         StartCoroutine(WaitAndSwitchTurn());
@@ -206,6 +222,12 @@ public class BattleGameImproved : MonoBehaviour
         SwitchTurn();
     }
 
+    public IEnumerator WaitAndQuitBattle(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        QuitBattle();
+    }
+
     public IEnumerator FadeToBlack()
     {
         while (stageLight.intensity > 0f) 
@@ -213,6 +235,7 @@ public class BattleGameImproved : MonoBehaviour
             stageLight.intensity -= 1f * Time.deltaTime;
             yield return null;
         }
+        musicManager.PlayMusic("exploration");
         SceneManager.LoadScene("ExplorationScene");
     }
 }
