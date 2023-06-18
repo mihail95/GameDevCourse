@@ -53,6 +53,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EnterCombat"",
+                    ""type"": ""Button"",
+                    ""id"": ""c438de4a-e9bc-4b3c-982f-0accc49ab7eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -187,6 +196,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4df36f7-5fc9-4b8d-af9c-661213c46c64"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EnterCombat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -198,6 +218,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_GodMode = m_Player.FindAction("GodMode", throwIfNotFound: true);
+        m_Player_EnterCombat = m_Player.FindAction("EnterCombat", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -262,6 +283,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_GodMode;
+    private readonly InputAction m_Player_EnterCombat;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -269,6 +291,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @GodMode => m_Wrapper.m_Player_GodMode;
+        public InputAction @EnterCombat => m_Wrapper.m_Player_EnterCombat;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -287,6 +310,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @GodMode.started += instance.OnGodMode;
             @GodMode.performed += instance.OnGodMode;
             @GodMode.canceled += instance.OnGodMode;
+            @EnterCombat.started += instance.OnEnterCombat;
+            @EnterCombat.performed += instance.OnEnterCombat;
+            @EnterCombat.canceled += instance.OnEnterCombat;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -300,6 +326,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @GodMode.started -= instance.OnGodMode;
             @GodMode.performed -= instance.OnGodMode;
             @GodMode.canceled -= instance.OnGodMode;
+            @EnterCombat.started -= instance.OnEnterCombat;
+            @EnterCombat.performed -= instance.OnEnterCombat;
+            @EnterCombat.canceled -= instance.OnEnterCombat;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -322,5 +351,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnGodMode(InputAction.CallbackContext context);
+        void OnEnterCombat(InputAction.CallbackContext context);
     }
 }

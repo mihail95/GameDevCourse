@@ -1,5 +1,7 @@
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TopDownPlayerController : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class TopDownPlayerController : MonoBehaviour
     Vector2 moveVector;
     bool isGod = false;
     bool isSprinting = false;
+    bool isColliding = false;
 
     private void Awake()
     {
@@ -22,7 +25,8 @@ public class TopDownPlayerController : MonoBehaviour
         col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
 
-        playerControls = new InputActions();         
+        playerControls = new InputActions();
+        gameObject.transform.position = GameManager.playerPos != null ? GameManager.playerPos: new Vector3(-4f, -5f, 0f);
     }
 
     private void OnEnable()
@@ -30,6 +34,7 @@ public class TopDownPlayerController : MonoBehaviour
         playerControls.Player.Sprint.performed += _ => isSprinting = true;
         playerControls.Player.Sprint.canceled += _ => isSprinting = false;
         playerControls.Player.GodMode.performed += _ => ToggleGodMode();
+        playerControls.Player.EnterCombat.performed += _ => CheckEnterCombat();
 
         playerControls.Enable();
     }
@@ -40,6 +45,15 @@ public class TopDownPlayerController : MonoBehaviour
     {
         isGod = !isGod;
         col.enabled = !isGod;
+    }
+
+    void CheckEnterCombat()
+    {
+        if (isColliding) 
+        {
+            GameManager.playerPos = gameObject.transform.position;
+            SceneManager.LoadScene("BattleScene"); 
+        }
     }
 
     private void FixedUpdate()
@@ -63,5 +77,15 @@ public class TopDownPlayerController : MonoBehaviour
         }
         else
             anim.SetBool("IsMoving", false);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision != null) isColliding = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision != null) isColliding = false;
     }
 }
