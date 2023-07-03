@@ -71,6 +71,15 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""BackToMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""fcc58c5e-de2f-44b1-b038-1925806a13ef"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -326,6 +335,17 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
                     ""action"": ""Fly"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ff9b092d-5662-43dc-9391-0ce11f8ef966"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""BackToMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -916,6 +936,7 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_GodMode = m_Player.FindAction("GodMode", throwIfNotFound: true);
         m_Player_Fly = m_Player.FindAction("Fly", throwIfNotFound: true);
+        m_Player_BackToMenu = m_Player.FindAction("BackToMenu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -994,6 +1015,7 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_GodMode;
     private readonly InputAction m_Player_Fly;
+    private readonly InputAction m_Player_BackToMenu;
     public struct PlayerActions
     {
         private @RollerBall m_Wrapper;
@@ -1003,6 +1025,7 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @GodMode => m_Wrapper.m_Player_GodMode;
         public InputAction @Fly => m_Wrapper.m_Player_Fly;
+        public InputAction @BackToMenu => m_Wrapper.m_Player_BackToMenu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1027,6 +1050,9 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
             @Fly.started += instance.OnFly;
             @Fly.performed += instance.OnFly;
             @Fly.canceled += instance.OnFly;
+            @BackToMenu.started += instance.OnBackToMenu;
+            @BackToMenu.performed += instance.OnBackToMenu;
+            @BackToMenu.canceled += instance.OnBackToMenu;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1046,6 +1072,9 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
             @Fly.started -= instance.OnFly;
             @Fly.performed -= instance.OnFly;
             @Fly.canceled -= instance.OnFly;
+            @BackToMenu.started -= instance.OnBackToMenu;
+            @BackToMenu.performed -= instance.OnBackToMenu;
+            @BackToMenu.canceled -= instance.OnBackToMenu;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1233,6 +1262,7 @@ public partial class @RollerBall: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnGodMode(InputAction.CallbackContext context);
         void OnFly(InputAction.CallbackContext context);
+        void OnBackToMenu(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

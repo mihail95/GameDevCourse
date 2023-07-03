@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxVelocity = 250f;
     [SerializeField] Camera mainCam;
     [SerializeField] ParticleSystem ps;
+    [SerializeField] Material volcanoMaterial;
+    [SerializeField] Material grassMaterial;
     ParticleSystem.MainModule ps_main;
     RollerBall playerControls;
 
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour
     bool isGod = false;
     bool isTouchingGround = true;
     bool hasDoubleJump = true;
+    private GameManager gameManager;
 
     private void Awake()
     {
@@ -35,11 +38,15 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<Collider>();
 
         playerControls = new RollerBall();
+        gameManager = FindObjectOfType<GameManager>();
+
+        GetComponent<MeshRenderer>().material = MaterialManager.IsDefautSkinSelected() ? volcanoMaterial : grassMaterial;
     }
     private void OnEnable()
     {
         playerControls.Player.GodMode.performed += _ => ToggleGodMode();
         playerControls.Player.Jump.performed += _ => Jump();
+        playerControls.Player.BackToMenu.performed += _ => GoBackToMenu();
 
         playerControls.Enable();
     }
@@ -99,12 +106,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void GoBackToMenu()
+    {
+        gameManager.LoadMainMenu();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name.Contains("Ground"))
         {
             isTouchingGround = true;
             hasDoubleJump = true;
+        }
+        if (collision.gameObject.name.Contains("Final") && gameManager.CheckAllCoinsCollected())
+        {
+            gameManager.EndLevel();
         }
     }
 
